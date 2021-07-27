@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="css/style.css">
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+        <table class="table table-condensed">
+                <thead>
+                        <tr>
+                                <td>NOMBRE</td>
+                                <td>PRECIO</td>
+                                <td>DESCRIPCION</td>
+                                <td>TIPO</td>
+                                <td>FECHA</td>
+                                <td>IMAGEN</td>
+                                <td>OPCIONES</td>
+
+                        </tr>
+                </thead>
+                <tbody>
+                        {% for aux in listasProductos %}
+                        <tr>   
+                                <td>{{ aux.nombre }}</td>
+                                <td>{{ aux.precio }}</td>
+                                <td>{{ aux.descripcion }}</td>
+                                <td>{{ aux.tipo }}</td>  
+                                <td>{{ aux.fecha }}</td>
+                                <td>
+                                   {% if aux.imagen%}
+                                   <img src= "{{ aux.imagen.url }}" alt = "" width="50" height="50">
+                                   {% else %}
+                                        <p>No posee imagen</p>
+                                   {% endif %}
+                                </td>
+                                <td>
+                                    {% if perms.app.change_producto %}
+                                    <a href="{% url 'modificar_productos' aux.id %} " class="btn btn-info">Modificar</a>
+                                    {% endif %}
+                                    {% if perms.app.delete_producto %}
+                                    <a onclick="confirmarDelete({{ aux.id }})" class="btn btn-danger">Eliminar</a>
+                                    {% endif %}
+                                </td>
+                        </tr>
+                        {% endfor %}
+                        
+                </tbody>           
+        </table>
+        </div>
+        <div>
+                {% include 'app/paginator.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'app/dist/js/funcionalidades.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
